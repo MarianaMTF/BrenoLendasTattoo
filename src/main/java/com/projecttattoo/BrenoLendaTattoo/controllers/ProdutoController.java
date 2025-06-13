@@ -1,6 +1,7 @@
 package com.projecttattoo.BrenoLendaTattoo.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -20,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.projecttattoo.BrenoLendaTattoo.dto.produto.RequestProdutoDto;
 import com.projecttattoo.BrenoLendaTattoo.dto.produto.ResponseProdutoDto;
+import com.projecttattoo.BrenoLendaTattoo.models.Produto;
 import com.projecttattoo.BrenoLendaTattoo.services.ProdutoService;
 
 @CrossOrigin(origins = "*")
@@ -80,14 +83,31 @@ public class ProdutoController {
 		return "catalogo";
 	}
 	
-	@GetMapping("/{id}")
-	public ResponseEntity<ResponseProdutoDto> getById(@PathVariable("id") Integer id){
-		return produtoService.getById(id);
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("/{id}/editar-produto")
+	public String atualizarProduto(@PathVariable Integer id, Model model) {
+		ResponseEntity<ResponseProdutoDto> response = produtoService.getById(id);
+		if(response.getStatusCode().is2xxSuccessful()) {
+			model.addAttribute("produto", response.getBody());
+			return "admin_atualizar_produto";
+		}
+		
+		return "redirect:/produto/catalogo";
 	}
 	
-	@PutMapping("/{id}")
-	public ResponseEntity<ResponseProdutoDto> update(@PathVariable("id") Integer id, @RequestBody RequestProdutoDto body){
-		return produtoService.update(id, body);
+	@PreAuthorize("hasRole('ADMIN')")
+	@PostMapping("/{id}/atualizar")
+	public String update(@PathVariable Integer id, @ModelAttribute RequestProdutoDto body, Model model){
+		ResponseEntity<ResponseProdutoDto> response = produtoService.update(id, body);
+		
+		if (response.getStatusCode().is2xxSuccessful()) {
+        	System.out.println("Consegui atualizar");
+            model.addAttribute("message", "Produto atualizado com sucesso!");
+        } else {
+        	System.out.println("Não consegui atualizar");
+            model.addAttribute("error", "Erro ao atualizar o produto.");
+        }
+        return "redirect:/produto/admin-catalogo";
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")

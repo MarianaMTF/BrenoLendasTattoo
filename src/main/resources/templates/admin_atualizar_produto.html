@@ -29,7 +29,7 @@
                 <h1>Novo Produto</h1>
             </div>
 
-            <form class="formulario" th:action="@{/produto/register}" method="post" enctype="multipart/form-data"
+            <form class="formulario" th:action="@{/produto/{id}/atualizar(id=${produto.id})}" method="post" enctype="multipart/form-data"
                 th:object="${produto}">
                 <div class="secao-formulario">
                     <h2>Referência Visual</h2>

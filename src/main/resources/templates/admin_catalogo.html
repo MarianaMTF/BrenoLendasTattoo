@@ -43,7 +43,9 @@
                                 style="display: inline;">
                                 <button class="botao-secundario">Excluir</button>
                             </form>
-                            <button class="botao-primario">Atualizar</button>
+                            <form th:action="@{/produto/{id}/editar-produto(id=${produto.id})}" method="get">
+                                <button type="submit" class="botao-primario">Atualizar</button>
+                            </form>
                         </div>
                     </div>
                 </div>

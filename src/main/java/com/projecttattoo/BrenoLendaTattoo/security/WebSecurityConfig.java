@@ -43,6 +43,8 @@ public class WebSecurityConfig {
 						.requestMatchers("/orcamentos/{id}/editar-orcamento").hasRole("USER")
 						.requestMatchers("/produto/admin-catalogo").hasRole("ADMIN")
 						.requestMatchers("/produto/admin-novo-produto").hasRole("ADMIN")
+						.requestMatchers("/produto/{id}/editar-produto").hasRole("ADMIN")
+						.requestMatchers("/produto/{id}/atualizar").hasRole("ADMIN")
 						.requestMatchers("/produto/register").hasRole("ADMIN")
 						.requestMatchers("/produto/{id}/deletar").hasRole("ADMIN")
 						.requestMatchers("/orcamentos/admin-orcamentos").hasRole("ADMIN")
