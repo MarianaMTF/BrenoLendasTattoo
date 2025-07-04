@@ -16,6 +16,7 @@ import com.projecttattoo.BrenoLendaTattoo.dto.artista.ResponseArtistaDTO;
 import com.projecttattoo.BrenoLendaTattoo.dto.orcamento.RequestOrcamentoDto;
 import com.projecttattoo.BrenoLendaTattoo.dto.orcamento.ResponseOrcamentoDto;
 import com.projecttattoo.BrenoLendaTattoo.enums.Roles;
+import com.projecttattoo.BrenoLendaTattoo.models.Artista;
 import com.projecttattoo.BrenoLendaTattoo.models.Cliente;
 import com.projecttattoo.BrenoLendaTattoo.models.Logins;
 import com.projecttattoo.BrenoLendaTattoo.models.Orcamento;
@@ -108,6 +109,10 @@ public class OrcamentoController {
         }
 
         model.addAttribute("orcamento", orcamento);
+        ResponseEntity<List<ResponseArtistaDTO>> artistasResponse = artistaService.listarTodos();
+        if (artistasResponse.getStatusCode().is2xxSuccessful()) {
+            model.addAttribute("artistas", artistasResponse.getBody());
+        }
         return "cliente/novo_orcamento";
     }
 
@@ -119,12 +124,13 @@ public class OrcamentoController {
         @RequestParam("altura") Double altura,
         @RequestParam("parteCorpo") String parteCorpo,
         @RequestParam("descricao") String descricao,
-        @RequestParam("artistaId") Integer artistaId,
+        @RequestParam("artistaId") int artistaId,
         @RequestParam(value = "produtoId", required = false) Integer produtoId,
         Model model, Principal principal
     ) {
     	String email = principal.getName();
     	Cliente cliente = clienteRepository.findByEmail(email);
+    	Artista artista = artistaRepository.findById(artistaId);
         RequestOrcamentoDto requestOrcamentoDto = new RequestOrcamentoDto(imagem, largura, altura, parteCorpo, descricao, produtoId, artistaId);
         ResponseEntity<ResponseOrcamentoDto> response;
 
