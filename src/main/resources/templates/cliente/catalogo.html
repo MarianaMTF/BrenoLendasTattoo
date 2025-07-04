@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo - Black Ink Studio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="d-flex">
+    <!-- Sidebar -->
+    <div class="sidebar bg-black text-white">
+        <div class="sidebar-header p-3 border-bottom">
+            <h4 class="mb-0">
+                <i class="fas fa-paint-brush me-2"></i>
+                Black Ink Studio
+            </h4>
+        </div>
+        <nav class="sidebar-nav">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/produto/catalogo}">
+                        <i class="fas fa-images"></i>
+                        Catálogo
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/orcamentos/meus-orcamentos}">
+                        <i class="fas fa-calculator"></i>
+                        Novo Orçamento
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/orcamentos/historico}">
+                        <i class="fas fa-history"></i>
+                        Histórico
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/cliente/minha-conta}">
+                        <i class="fas fa-user"></i>
+                        Perfil
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="sidebar-footer p-3 border-top mt-auto">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-user-circle fa-2x me-3"></i>
+                <div>
+                    <div class="fw-bold" id="userName">Cliente</div>
+                    <small class="text-muted">Cliente</small>
+                </div>
+            </div>
+            <form th:action="@{/auth/logout}" method="post">
+                <button class="btn btn-outline-light btn-sm mt-2 w-100" type="submit">
+                    <i class="fas fa-sign-out-alt me-1"></i>
+                    Sair
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content flex-fill">
+        <!-- Header -->
+        <header class="bg-white border-bottom p-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1 class="h3 mb-0">Catálogo de Produtos</h1>
+                <div class="d-flex gap-2">
+                    <select class="form-select" style="width: auto;" id="artistFilter">
+                        <option value="">Todos os Artistas</option>
+                        <!-- Exemplo dinâmico -->
+                        <option th:each="artista : ${artistas}" th:value="${artista.nome}" th:text="${artista.nome}"></option>
+                    </select>
+                    <select class="form-select" style="width: auto;" id="categoryFilter">
+                        <option value="">Todas as Categorias</option>
+                        <option value="Realismo">Realismo</option>
+                        <option value="Tradicional">Tradicional</option>
+                        <option value="Geométrico">Geométrico</option>
+                        <option value="Piercing">Piercing</option>
+                    </select>
+                </div>
+            </div>
+        </header>
+
+        <!-- Catalog Content -->
+        <div class="p-4">
+            <div class="row" id="catalogContainer">
+                <!-- Loop dos produtos -->
+                <div class="col-md-4 mb-4" th:each="produto : ${produtos}">
+                    <div class="card border-0 shadow-sm">
+                        <img th:src="${produto.imagem}" class="card-img-top" th:alt="${produto.nome}">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${produto.nome}">Nome Produto</h5>
+                            <p class="card-text" th:text="${produto.descricao}">Descrição do produto</p>
+                            <p class="card-text"><strong>Artista:</strong> <span th:text="${produto.artista.nome}">Artista</span></p>
+                            <p class="card-text"><strong>Categoria:</strong> <span th:text="${produto.categoria}">Categoria</span></p>
+                            <p class="card-text"><strong>Preço base:</strong> R$ <span th:text="${produto.valor}">0.00</span></p>
+                            <form th:action="@{/orcamentos/{id}/novo-orcamento(id=${produto.id})}" method="get">
+                                <button class="btn btn-dark w-100" type="submit">
+                                    <i class="fas fa-calculator me-2"></i>
+                                    Solicitar Orçamento
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- fim do loop -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

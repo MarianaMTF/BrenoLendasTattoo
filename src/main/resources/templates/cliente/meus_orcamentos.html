@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Cliente - Black Ink Studio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div class="sidebar bg-black text-white">
+            <div class="sidebar-header p-3 border-bottom">
+                <h4 class="mb-0">
+                    <i class="fas fa-paint-brush me-2"></i>
+                    Black Ink Studio
+                </h4>
+            </div>
+            <nav class="sidebar-nav">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/produto/catalogo}">
+                            <i class="fas fa-images"></i>
+                            Catálogo
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/orcamentos/meus-orcamentos}">
+                            <i class="fas fa-calculator"></i>
+                            Novo Orçamento
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/orcamentos/historico}">
+                            <i class="fas fa-history"></i>
+                            Histórico
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/cliente/minha-conta}">
+                            <i class="fas fa-user"></i>
+                            Perfil
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer p-3 border-top mt-auto">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-user-circle fa-2x me-3"></i>
+                    <div>
+                        <div class="fw-bold" id="userName">Cliente</div>
+                        <small class="text-muted">Cliente</small>
+                    </div>
+                </div>
+                <button class="btn btn-outline-light btn-sm mt-2 w-100" onclick="logout()">
+                    <i class="fas fa-sign-out-alt me-1"></i>
+                    Sair
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content flex-fill">
+            <!-- Header -->
+            <header class="bg-white border-bottom p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h1 class="h3 mb-0">Dashboard do Cliente</h1>
+                    <div class="d-flex align-items-center">
+                        <button class="btn btn-outline-secondary me-2">
+                            <i class="fas fa-bell"></i>
+                        </button>
+                        <a th:href="@{/orcamentos/novo-orcamento}" class="btn btn-dark">
+                            <i class="fas fa-plus me-1"></i>
+                            Novo Orçamento
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="p-4">
+                <div class="row mt-4">
+                    <div class="col-md-8">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Orçamentos Recentes</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Artista</th>
+                                                <th>Descrição</th>
+                                                <th>Status</th>
+                                                <th>Data</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="orcamento : ${orcamentos}">
+                                                <td th:text="${orcamento.id}"></td>
+                                                <td th:text="${orcamento.artista.nome}"></td>
+                                                <td th:text="${orcamento.descricao}"></td>
+                                                <td th:text="${orcamento.status}"></td>
+                                                <td th:text="${#temporals.format(orcamento.data, 'dd/MM/yyyy')}"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/main.js"></script>
+</body>
+</html>

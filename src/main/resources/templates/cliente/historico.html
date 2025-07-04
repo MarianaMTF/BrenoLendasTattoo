@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico - Black Ink Studio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div class="sidebar bg-black text-white">
+            <div class="sidebar-header p-3 border-bottom">
+                <h4 class="mb-0">
+                    <i class="fas fa-paint-brush me-2"></i>
+                    Black Ink Studio
+                </h4>
+            </div>
+            <nav class="sidebar-nav">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/produto/catalogo}">
+                            <i class="fas fa-images"></i>
+                            Catálogo
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/orcamentos/meus-orcamentos}">
+                            <i class="fas fa-calculator"></i>
+                            Novo Orçamento
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/orcamentos/historico}">
+                            <i class="fas fa-history"></i>
+                            Histórico
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/cliente/minha-conta}">
+                            <i class="fas fa-user"></i>
+                            Perfil
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer p-3 border-top mt-auto">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-user-circle fa-2x me-3"></i>
+                    <div>
+                        <div class="fw-bold" id="userName">Cliente</div>
+                        <small class="text-muted">Cliente</small>
+                    </div>
+                </div>
+                <button class="btn btn-outline-light btn-sm mt-2 w-100" onclick="logout()">
+                    <i class="fas fa-sign-out-alt me-1"></i>
+                    Sair
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content flex-fill">
+            <!-- Header -->
+            <header class="bg-white border-bottom p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h1 class="h3 mb-0">Histórico de Trabalhos</h1>
+                </div>
+            </header>
+
+            <!-- History Content -->
+            <div class="p-4">
+                <div class="row" id="historyContainer">
+                    <!-- Trabalho 1 -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card border-0 shadow-sm">
+                            <img src="https://images.pexels.com/photos/1557869/pexels-photo-1557869.jpeg" class="card-img-top" alt="Tatuagem Concluída">
+                            <div class="card-body">
+                                <h5 class="card-title">Tatuagem de Águia</h5>
+                                <p class="card-text">Tatuagem realista de águia no braço direito</p>
+                                <p class="card-text"><strong>Artista:</strong> Maria Santos</p>
+                                <p class="card-text"><strong>Parte do corpo:</strong> Braço</p>
+                                <p class="card-text"><strong>Data:</strong> 15/11/2024</p>
+                                <p class="card-text"><strong>Avaliação:</strong> 
+                                    <span class="text-warning">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </span>
+                                </p>
+                                <button class="btn btn-outline-dark btn-sm" onclick="viewDetails(1)">
+                                    <i class="fas fa-eye me-1"></i>
+                                    Ver Detalhes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Trabalho 2 -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card border-0 shadow-sm">
+                            <img src="https://images.pexels.com/photos/1040881/pexels-photo-1040881.jpeg" class="card-img-top" alt="Tatuagem Concluída">
+                            <div class="card-body">
+                                <h5 class="card-title">Tatuagem Geométrica</h5>
+                                <p class="card-text">Design geométrico minimalista na perna</p>
+                                <p class="card-text"><strong>Artista:</strong> Pedro Costa</p>
+                                <p class="card-text"><strong>Parte do corpo:</strong> Perna</p>
+                                <p class="card-text"><strong>Data:</strong> 02/11/2024</p>
+                                <p class="card-text"><strong>Avaliação:</strong> 
+                                    <span class="text-warning">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                    </span>
+                                </p>
+                                <button class="btn btn-outline-dark btn-sm" onclick="viewDetails(2)">
+                                    <i class="fas fa-eye me-1"></i>
+                                    Ver Detalhes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Trabalho 3 -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card border-0 shadow-sm">
+                            <img src="https://images.pexels.com/photos/1619843/pexels-photo-1619843.jpeg" class="card-img-top" alt="Piercing">
+                            <div class="card-body">
+                                <h5 class="card-title">Piercing na Orelha</h5>
+                                <p class="card-text">Piercing helix com joia de titânio</p>
+                                <p class="card-text"><strong>Artista:</strong> Maria Santos</p>
+                                <p class="card-text"><strong>Parte do corpo:</strong> Orelha</p>
+                                <p class="card-text"><strong>Data:</strong> 20/10/2024</p>
+                                <p class="card-text"><strong>Avaliação:</strong> 
+                                    <span class="text-warning">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </span>
+                                </p>
+                                <button class="btn btn-outline-dark btn-sm" onclick="viewDetails(3)">
+                                    <i class="fas fa-eye me-1"></i>
+                                    Ver Detalhes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Trabalho 4 -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card border-0 shadow-sm">
+                            <img src="https://images.pexels.com/photos/1552237/pexels-photo-1552237.jpeg" class="card-img-top" alt="Tatuagem Concluída">
+                            <div class="card-body">
+                                <h5 class="card-title">Tatuagem Tradicional</h5>
+                                <p class="card-text">Rosa tradicional americana no antebraço</p>
+                                <p class="card-text"><strong>Artista:</strong> Pedro Costa</p>
+                                <p class="card-text"><strong>Parte do corpo:</strong> Antebraço</p>
+                                <p class="card-text"><strong>Data:</strong> 05/10/2024</p>
+                                <p class="card-text"><strong>Avaliação:</strong> 
+                                    <span class="text-warning">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </span>
+                                </p>
+                                <button class="btn btn-outline-dark btn-sm" onclick="viewDetails(4)">
+                                    <i class="fas fa-eye me-1"></i>
+                                    Ver Detalhes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/main.js"></script>
+</body>
+</html>

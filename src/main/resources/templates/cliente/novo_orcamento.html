@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novo Orçamento - Black Ink Studio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div class="sidebar bg-black text-white">
+            <div class="sidebar-header p-3 border-bottom">
+                <h4 class="mb-0">
+                    <i class="fas fa-paint-brush me-2"></i>
+                    Black Ink Studio
+                </h4>
+            </div>
+            <nav class="sidebar-nav">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/produto/catalogo}">
+                            <i class="fas fa-images"></i>
+                            Catálogo
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/orcamentos/meus-orcamentos}">
+                            <i class="fas fa-calculator"></i>
+                            Novo Orçamento
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/orcamentos/historico}">
+                            <i class="fas fa-history"></i>
+                            Histórico
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/cliente/minha-conta}">
+                            <i class="fas fa-user"></i>
+                            Perfil
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer p-3 border-top mt-auto">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-user-circle fa-2x me-3"></i>
+                    <div>
+                        <div class="fw-bold" id="userName">Cliente</div>
+                        <small class="text-muted">Cliente</small>
+                    </div>
+                </div>
+                <button class="btn btn-outline-light btn-sm mt-2 w-100" onclick="logout()">
+                    <i class="fas fa-sign-out-alt me-1"></i>
+                    Sair
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content flex-fill">
+            <!-- Header -->
+            <header class="bg-white border-bottom p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h1 class="h3 mb-0">Novo Orçamento</h1>
+                </div>
+            </header>
+
+            <!-- Quote Form -->
+            <div class="p-4">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-white">
+                                <h5 class="mb-0">Informações da Tatuagem</h5>
+                            </div>
+                            <div class="card-body">
+                                <form class="formulario" th:action="@{/orcamentos/novo}" method="post"
+                                    enctype="multipart/form-data" th:object="${orcamento}">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="artistId" class="form-label">Artista</label>
+                                                <select class="form-select" id="artistId" name="artistaId" required>
+                                                    <option value="">Selecione um artista</option>
+                                                    <option th:each="artista : ${artistas}" th:value="${artista.id}"
+                                                        th:text="${artista.nome}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="bodyPart" class="form-label">Parte do Corpo</label>
+                                                <select class="form-select" id="bodyPart" name="bodyPart"
+                                                    th:field="*{parteCorpo}" required>
+                                                    <option value="">Selecione</option>
+                                                    <option value="Braço">Braço</option>
+                                                    <option value="Perna">Perna</option>
+                                                    <option value="Costas">Costas</option>
+                                                    <option value="Peito">Peito</option>
+                                                    <option value="Outro">Outro</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="width" class="form-label">Largura (cm)</label>
+                                                <input type="number" class="form-control" id="width" name="width"
+                                                    th:field="*{largura}" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="height" class="form-label">Altura (cm)</label>
+                                                <input type="number" class="form-control" id="height" name="height"
+                                                    th:field="*{altura}" required>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="description" class="form-label">Descrição</label>
+                                        <textarea class="form-control" id="description" name="description" rows="4"
+                                            th:field="*{descricao}" placeholder="Descreva detalhadamente sua ideia..."
+                                            required></textarea>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="tattooImage" class="form-label">Imagem de Referência</label>
+                                        <input type="file" class="form-control" th:field="*{imagem}" id="tattooImage"
+                                            name="tattooImage" accept="uploads/*">
+                                        <div class="form-text">Opcional: Envie uma imagem de referência</div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <img id="imagePreview" class="img-fluid rounded"
+                                            style="display: none; max-height: 200px;">
+                                    </div>
+
+                                    <div class="d-flex gap-2 mt-4">
+                                        <button type="submit" class="btn btn-dark">
+                                            <i class="fas fa-paper-plane me-2"></i>
+                                            Enviar Orçamento
+                                        </button>
+                                        <button type="reset" class="btn btn-outline-secondary">
+                                            <i class="fas fa-undo me-2"></i>
+                                            Limpar
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-white">
+                                <h5 class="mb-0">Informações</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    <strong>Dica:</strong> Seja o mais específico possível na descrição para receber um
+                                    orçamento mais preciso.
+                                </div>
+
+                                <h6>Próximos Passos:</h6>
+                                <ol class="small">
+                                    <li>Envie seu orçamento</li>
+                                    <li>Aguarde a resposta do artista</li>
+                                    <li>Confirme o agendamento</li>
+                                    <li>Realize sua tatuagem</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/main.js"></script>
+</body>
+
+</html>
