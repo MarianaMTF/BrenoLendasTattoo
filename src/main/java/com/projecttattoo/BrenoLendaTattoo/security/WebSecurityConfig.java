@@ -49,6 +49,8 @@ public class WebSecurityConfig {
 						.requestMatchers("/produto/{id}/deletar").hasRole("ADMIN")
 						.requestMatchers("/orcamentos/admin-orcamentos").hasRole("ADMIN")
 						.requestMatchers("/produto/{id}/concluir").hasRole("ADMIN")
+						.requestMatchers("/admin/artistas/novo").hasRole("ADMIN")
+						.requestMatchers("/admin/artistas").hasRole("ADMIN")
 						.anyRequest()
 						.authenticated())
 				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class).build();

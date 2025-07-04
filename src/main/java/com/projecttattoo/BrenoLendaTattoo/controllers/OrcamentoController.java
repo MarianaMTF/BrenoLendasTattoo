@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.projecttattoo.BrenoLendaTattoo.dto.artista.ResponseArtistaDTO;
 import com.projecttattoo.BrenoLendaTattoo.dto.orcamento.RequestOrcamentoDto;
 import com.projecttattoo.BrenoLendaTattoo.dto.orcamento.ResponseOrcamentoDto;
 import com.projecttattoo.BrenoLendaTattoo.enums.Roles;
@@ -19,9 +20,11 @@ import com.projecttattoo.BrenoLendaTattoo.models.Cliente;
 import com.projecttattoo.BrenoLendaTattoo.models.Logins;
 import com.projecttattoo.BrenoLendaTattoo.models.Orcamento;
 import com.projecttattoo.BrenoLendaTattoo.models.Produto;
+import com.projecttattoo.BrenoLendaTattoo.repositories.ArtistaRepository;
 import com.projecttattoo.BrenoLendaTattoo.repositories.ClienteRepository;
 import com.projecttattoo.BrenoLendaTattoo.repositories.LoginsRepository;
 import com.projecttattoo.BrenoLendaTattoo.repositories.ProdutoRepository;
+import com.projecttattoo.BrenoLendaTattoo.services.ArtistaService;
 import com.projecttattoo.BrenoLendaTattoo.services.OrcamentoService;
 
 
@@ -41,7 +44,13 @@ public class OrcamentoController {
     
     @Autowired
     private LoginsRepository loginsRepository;
+    
+    @Autowired
+    private ArtistaService artistaService;
 
+    @Autowired
+    private ArtistaRepository artistaRepository;
+    
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/novo-orcamento")
     public String exibirFormularioNovoOrcamento(
@@ -49,6 +58,7 @@ public class OrcamentoController {
         Model model
     ) {
         Orcamento orcamento = new Orcamento();
+        
         
         if (produtoId != null) {
             Optional<Produto> produtoOpt = produtoRepository.findById(produtoId);
@@ -66,7 +76,12 @@ public class OrcamentoController {
         }
 
         model.addAttribute("orcamento", orcamento);
-        return "novo_orcamento";
+        
+        ResponseEntity<List<ResponseArtistaDTO>> artistasResponse = artistaService.listarTodos();
+        if (artistasResponse.getStatusCode().is2xxSuccessful()) {
+            model.addAttribute("artistas", artistasResponse.getBody());
+        }
+        return "cliente/novo_orcamento";
     }
     
     @PreAuthorize("hasRole('USER')")
@@ -93,7 +108,7 @@ public class OrcamentoController {
         }
 
         model.addAttribute("orcamento", orcamento);
-        return "novo_orcamento";
+        return "cliente/novo_orcamento";
     }
 
     @PreAuthorize("hasRole('USER')")
@@ -104,12 +119,13 @@ public class OrcamentoController {
         @RequestParam("altura") Double altura,
         @RequestParam("parteCorpo") String parteCorpo,
         @RequestParam("descricao") String descricao,
+        @RequestParam("artistaId") Integer artistaId,
         @RequestParam(value = "produtoId", required = false) Integer produtoId,
         Model model, Principal principal
     ) {
     	String email = principal.getName();
     	Cliente cliente = clienteRepository.findByEmail(email);
-        RequestOrcamentoDto requestOrcamentoDto = new RequestOrcamentoDto(imagem, largura, altura, parteCorpo, descricao, produtoId);
+        RequestOrcamentoDto requestOrcamentoDto = new RequestOrcamentoDto(imagem, largura, altura, parteCorpo, descricao, produtoId, artistaId);
         ResponseEntity<ResponseOrcamentoDto> response;
 
         if (produtoId != null) {
@@ -136,7 +152,7 @@ public class OrcamentoController {
         Cliente cliente = clienteRepository.findByEmail(email);
         if (cliente == null) {
             model.addAttribute("error", "Cliente não encontrado.");
-            return "meus_orcamentos";
+            return "cliente/meus_orcamentos";
         }
 
         ResponseEntity<List<ResponseOrcamentoDto>> response = orcamentoService.getOrcamentoByClienteId(cliente.getId());
@@ -148,7 +164,7 @@ public class OrcamentoController {
             System.out.println("Não consegui recuperar com o cliente");
         }
 
-        return "meus_orcamentos";
+        return "cliente/meus_orcamentos";
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -228,6 +244,6 @@ public class OrcamentoController {
         if (response.getStatusCode().is2xxSuccessful()) {
             model.addAttribute("orcamentos", response.getBody());
         }
-        return "historico";
+        return "cliente/historico";
     }
 }

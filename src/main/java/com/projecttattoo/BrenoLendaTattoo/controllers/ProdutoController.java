@@ -20,9 +20,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.projecttattoo.BrenoLendaTattoo.dto.artista.ResponseArtistaDTO;
 import com.projecttattoo.BrenoLendaTattoo.dto.produto.RequestProdutoDto;
 import com.projecttattoo.BrenoLendaTattoo.dto.produto.ResponseProdutoDto;
 import com.projecttattoo.BrenoLendaTattoo.models.Produto;
+import com.projecttattoo.BrenoLendaTattoo.repositories.ArtistaRepository;
+import com.projecttattoo.BrenoLendaTattoo.services.ArtistaService;
 import com.projecttattoo.BrenoLendaTattoo.services.ProdutoService;
 
 @CrossOrigin(origins = "*")
@@ -32,6 +35,9 @@ public class ProdutoController {
 	
 	@Autowired
 	private ProdutoService produtoService;
+	
+	@Autowired
+	private ArtistaService artistaService;
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/admin-novo-produto")
@@ -76,11 +82,16 @@ public class ProdutoController {
 	@PreAuthorize("hasRole('USER')")
 	@GetMapping("/catalogo")
 	public String listarProdutos(Model model){
-		ResponseEntity<List<ResponseProdutoDto>> response = produtoService.getAll();
-		if(response.getStatusCode().is2xxSuccessful()) {
-			model.addAttribute("produtos", response.getBody());			
+		ResponseEntity<List<ResponseProdutoDto>> responseProduto = produtoService.getAll();
+		if(responseProduto.getStatusCode().is2xxSuccessful()) {
+			model.addAttribute("produtos", responseProduto.getBody());			
 		}
-		return "catalogo";
+		
+		ResponseEntity<List<ResponseArtistaDTO>> responseArtista = artistaService.listarTodos();
+		if(responseArtista.getStatusCode().is2xxSuccessful()) {
+			model.addAttribute(responseArtista);
+		}
+		return "cliente/catalogo";
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")

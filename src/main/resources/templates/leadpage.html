@@ -1,26 +1,55 @@
 <!DOCTYPE html>
-<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
-
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Breno Lendas - Studio de Tatuagem</title>
-    <link rel="stylesheet" href="/css/style_leadpage.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-
 <body>
-    <div class="hero">
-        <nav>
-            <h1>Breno Lendas</h1>
-            <div class="nav-links">
-                <a th:href="@{/cliente/cadastro}" class="nav-link">Cadastro</a>
-                <a th:href="@{/auth/login}" class="nav-link">Entrar</a>
-            </div>
-        </nav>
-
+    <!-- Hero Section -->
+    <section class="hero">
         <div class="hero-content">
-            <h2>Breno Lendas<br>Studio de Tatuagem</h2>
-            <p>Combinando tecnologia e arte, o Studio de Tatuagem Breno Lendas proporciona um atendimento profissional e uma plataforma moderna para melhorar a praticidade da relação dos clientes com os artistas.</p>
+            <h1>Breno Lendas</h1>
+            <p>Studio de Tatuagem</p>
+            <div class="hero-buttons">
+                <a th:href="@{/cliente/cadastro}" class="botao-primario">Cadastrar-se</a>
+                <a th:href="@{/auth/login}" class="botao-secundario">Entrar</a>
+            </div>
         </div>
-    </div>
+    </section>
+
+    <!-- Galeria de Trabalhos -->
+    <section class="galeria">
+        <div class="container">
+            <div class="cabecalho-pagina">
+                <h2>Nossos Trabalhos</h2>
+                <p>Confira alguns dos nossos melhores trabalhos</p>
+            </div>
+            <div class="galeria-grid">
+                <div class="galeria-item">
+                    <img src="https://images.pexels.com/photos/1319460/pexels-photo-1319460.jpeg" alt="Tatuagem 1">
+                </div>
+                <div class="galeria-item">
+                    <img src="https://images.pexels.com/photos/1040881/pexels-photo-1040881.jpeg" alt="Tatuagem 2">
+                </div>
+                <div class="galeria-item">
+                    <img src="https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg" alt="Tatuagem 3">
+                </div>
+                <div class="galeria-item">
+                    <img src="https://images.pexels.com/photos/1040879/pexels-photo-1040879.jpeg" alt="Tatuagem 4">
+                </div>
+                <div class="galeria-item">
+                    <img src="https://images.pexels.com/photos/1040878/pexels-photo-1040878.jpeg" alt="Tatuagem 5">
+                </div>
+                <div class="galeria-item">
+                    <img src="https://images.pexels.com/photos/1040877/pexels-photo-1040877.jpeg" alt="Tatuagem 6">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+</html>

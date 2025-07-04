@@ -51,4 +51,9 @@ public class Orcamento {
 	
 	@OneToOne(mappedBy = "orcamento", cascade = CascadeType.ALL, orphanRemoval = true)
     private Agendamento agendamento;
+	
+	@ManyToOne
+	@JoinColumn(name = "id_artista", nullable = false)
+	private Artista artista;
+
 }

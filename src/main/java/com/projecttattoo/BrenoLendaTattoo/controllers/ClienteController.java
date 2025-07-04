@@ -40,7 +40,7 @@ public class ClienteController {
 	@GetMapping("/cadastro")
 	public String exibirTeladCadastro(Model model) {
 		model.addAttribute("cliente", new RequestRegisterDto(null, null, null, null, null));
-		return "cadastro";
+		return "cliente/cadastro";
 	}
 	
 	@PostMapping("/register")
@@ -68,7 +68,7 @@ public class ClienteController {
 		
 		model.addAttribute("cliente", cliente);
 		
-		return "minha_conta";
+		return "cliente/minha_conta";
 	}
 	
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")

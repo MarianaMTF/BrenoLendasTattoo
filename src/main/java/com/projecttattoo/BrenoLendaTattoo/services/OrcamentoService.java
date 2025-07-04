@@ -16,9 +16,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -70,7 +73,9 @@ public class OrcamentoService implements OrcamentoInterfaceService {
 				"Costas", 0.5, "Peito", 0.9, "Pescoço", 0.1, "Pé", 0.4, "Outro", 0.5);
 
 		double fatorLocalizacao = fatorPorParteCorpo.getOrDefault(orcamento.getParteCorpo(), 1.0);
-		return altura * largura * valorPorCm * fatorLocalizacao;
+		double calculo = altura * largura * valorPorCm * fatorLocalizacao;
+		BigDecimal bd = new BigDecimal(calculo).setScale(2, RoundingMode.HALF_UP);
+	    return bd.doubleValue();
 	}
 
 	private String settarImagem(MultipartFile imagem) throws IOException {

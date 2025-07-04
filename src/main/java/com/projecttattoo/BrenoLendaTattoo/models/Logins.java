@@ -46,6 +46,10 @@ public class Logins implements UserDetails{
 	@OneToOne
 	@JoinColumn(name = "id_Cliente")
 	private Cliente cliente;
+	
+	@OneToOne
+	@JoinColumn(name = "id_artista")
+	private Artista artista;
 
 	@Column(name = "userRole")
 	private Roles userRole;
