@@ -4,6 +4,7 @@ import com.projecttattoo.BrenoLendaTattoo.dto.artista.RequestArtistaDTO;
 import com.projecttattoo.BrenoLendaTattoo.services.ArtistaService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,6 +19,7 @@ public class ArtistaController {
     private ArtistaService artistaService;
 
     // 1) Exibe o formulário em GET
+    //@PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/novo")
     public String formNovoArtista(Model model) {
         model.addAttribute("artista", new RequestArtistaDTO(null, null, null, null, null, null, null));
@@ -25,6 +27,7 @@ public class ArtistaController {
     }
 
     // 2) Recebe o POST do formulário
+    //@PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/novo")
     public String novoArtista(
             @Validated @ModelAttribute("artista") RequestArtistaDTO dto,

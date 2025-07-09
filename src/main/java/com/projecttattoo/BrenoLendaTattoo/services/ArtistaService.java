@@ -11,10 +11,12 @@ import com.projecttattoo.BrenoLendaTattoo.repositories.LoginsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -26,9 +28,10 @@ public class ArtistaService {
 
     @Autowired
     private LoginsRepository loginsRepository;
+    
 
     @Autowired
-    private PasswordEncoder encoder;
+    private PasswordEncoder passwordEncoder;
 
     public ResponseEntity<String> cadastrarArtista(RequestArtistaDTO dto) {
         if (artistaRepository.existsByEmail(dto.email())) {
@@ -41,7 +44,7 @@ public class ArtistaService {
         artista.setSobrenome(dto.sobrenome());
         artista.setCpf(dto.cpf());
         artista.setEmail(dto.email());
-        artista.setSenha(encoder.encode(dto.senha()));
+        artista.setSenha(passwordEncoder.encode(dto.senha()));
         artista.setEstilo(dto.estilo());
         artista.setTelefone(dto.telefone());
 
@@ -50,7 +53,7 @@ public class ArtistaService {
         Logins login = new Logins();
         login.setNome(dto.nome());
         login.setEmail(dto.email());
-        login.setSenha(encoder.encode(dto.senha()));
+        login.setSenha(passwordEncoder.encode(dto.senha()));
         login.setUserRole(Roles.ADMIN);
         login.setArtista(artista);
 
@@ -117,9 +120,10 @@ public class ArtistaService {
         artista.setEmail(dto.email());
         artista.setTelefone(dto.telefone());
         artista.setEstilo(dto.estilo());
-        artista.setSenha(encoder.encode(dto.senha()));
+        artista.setSenha(passwordEncoder.encode(dto.senha()));
 
         artistaRepository.save(artista);
         return ResponseEntity.ok("Artista atualizado com sucesso");
     }
+    
 }

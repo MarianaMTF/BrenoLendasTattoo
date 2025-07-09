@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Produtos - Black Ink Studio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div class="sidebar bg-black text-white">
+            <div class="sidebar-header p-3 border-bottom">
+                <h4 class="mb-0">
+                    <i class="fas fa-paint-brush me-2"></i>
+                    Breno Lenda
+                </h4>
+            </div>
+            <nav class="sidebar-nav">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="artist-catalog.html">
+                            <i class="fas fa-boxes"></i>
+                            Gerenciar Produtos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="artist-quotes.html">
+                            <i class="fas fa-file-invoice"></i>
+                            Orçamentos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="artist-history.html">
+                            <i class="fas fa-history"></i>
+                            Histórico
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="artist-manage.html">
+                            <i class="fas fa-users"></i>
+                            Gerenciar Artistas
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer p-3 border-top mt-auto">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-user-circle fa-2x me-3"></i>
+                    <div>
+                        <div class="fw-bold" id="userName">Artista</div>
+                        <small class="text-muted">Artista</small>
+                    </div>
+                </div>
+                <form th:action="@{/auth/login}" method="get">
+                    <button class="btn btn-outline-light btn-sm mt-2 w-100" type="submit">
+                        <i class="fas fa-sign-out-alt me-1"></i>
+                        Sair
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content flex-fill">
+            <!-- Header -->
+            <header class="bg-white border-bottom p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h1 class="h3 mb-0">Gerenciar Produtos</h1>
+                    <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                        <i class="fas fa-plus me-2"></i>
+                        Adicionar Produto
+                    </button>
+                </div>
+            </header>
+
+            <!-- Products Content -->
+            <div class="p-4">
+                <div class="row" id="productsContainer">
+                    <div class="col-md-4 mb-4">
+                        <div class="card border-0 shadow-sm" th:each="produto : ${produtos}">
+                            <img th:src="${produto.imagem}" class="card-img-top" alt="Imagem produto">
+                            <div class="card-body">
+                                <h5 class="card-title"><span th:text="${produto.nome}"></span></h5>
+                                <p class="card-text"><span th:text="${produto.descricao}"></span></p>
+                                <p class="card-text"><strong>Estilo:</strong> <span th:text="${produto.estilo}"></span>
+                                </p>
+                                <p class="card-text"><strong>Artista:</strong> <span
+                                        th:text="${produto.artista.nome}"></span></p>
+                                <p class="card-text"><strong>Preço base:</strong> R$<span
+                                        th:text="${produto.valor}"></span></p>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#editProductModal" data-id="${produto.id}"
+                                        data-nome="${produto.nome}" data-artista="${produto.artista.id}"
+                                        data-estilo="${produto.estilo}" data-descricao="${produto.descricao}"
+                                        data-valor="${produto.valor}">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </button>
+                                    <form th:action="@{/produto/{id}/deletar(id=${produto.id})}" method="post"
+                                        style="display: inline;">
+                                        <button class="btn btn-sm btn-danger" onclick="deleteProduct(1)">
+                                            <i class="fas fa-trash"></i> Excluir
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Product Modal -->
+    <div class="modal fade" id="editProductModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Produto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editProductForm" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="id" id="editProductId">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="editProductName" class="form-label">Nome do Produto</label>
+                                    <input type="text" class="form-control" id="editProductName" name="nome" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="editProductArtist" class="form-label">Artista</label>
+                                    <select class="form-select" id="editProductArtist" name="artista" required>
+                                        <option value="">Selecione</option>
+                                        <option th:each="artista : ${artistas}" th:value="${artista.id}"
+                                            th:text="${artista.nome}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="editProductCategory" class="form-label">Estilo</label>
+                                    <select class="form-select" id="editProductCategory" name="estilo" required>
+                                        <option value="">Selecione</option>
+                                        <option value="Realismo">Realismo</option>
+                                        <option value="Tradicional">Tradicional</option>
+                                        <option value="Geométrico">Geométrico</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="editProductDescription" class="form-label">Descrição</label>
+                            <textarea class="form-control" id="editProductDescription" name="descricao" rows="3"
+                                required></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="editProductPrice" class="form-label">Preço Base (R$)</label>
+                            <input type="number" class="form-control" id="editProductPrice" name="valor" step="0.01"
+                                required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="editProductImage" class="form-label">Imagem</label>
+                            <input type="file" class="form-control" id="editProductImage" name="imagem"
+                                accept="image/*">
+                            <div class="form-text">Deixe em branco para manter a imagem atual</div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-dark">Atualizar Produto</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div class="modal fade" id="addProductModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Adicionar Produto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/produto/register}" method="post" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="productName" class="form-label">Nome do Produto</label>
+                                    <input type="text" class="form-control" id="productName" name="nome" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="productArtist" class="form-label">Artista</label>
+                                    <select class="form-select" id="productArtist" name="artista" required>
+                                        <option value="">Selecione</option>
+                                        <option th:each="artista : ${artistas}" th:value="${artista.id}"
+                                            th:text="${artista.nome}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="productCategory" class="form-label">Estilo</label>
+                                    <select class="form-select" id="productCategory" name="estilo" required>
+                                        <option value="">Selecione</option>
+                                        <option value="Realismo">Realismo</option>
+                                        <option value="Tradicional">Tradicional</option>
+                                        <option value="Geométrico">Geométrico</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="productDescription" class="form-label">Descrição</label>
+                            <textarea class="form-control" id="productDescription" name="descricao" rows="3"
+                                required></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="productPrice" class="form-label">Preço Base (R$)</label>
+                            <input type="number" class="form-control" id="productPrice" name="valor" step="0.01"
+                                required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="productImage" class="form-label">Imagem</label>
+                            <input type="file" class="form-control" id="productImage" name="imagem" accept="image/*"
+                                required>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-dark">Salvar Produto</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const editModal = document.getElementById('editProductModal');
+
+            editModal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+
+                // Usando dataset para acessar os atributos data-*
+                const id = button.dataset.id;
+                const nome = button.dataset.nome;
+                const artista = button.dataset.artista;
+                const estilo = button.dataset.estilo;
+                const descricao = button.dataset.descricao;
+                const valor = button.dataset.valor;
+
+                // Debug: verifique os valores no console
+                console.log('Dados do produto:', { id, nome, artista, estilo, descricao, valor });
+
+                // Atualiza o formulário
+                const form = document.getElementById('editProductForm');
+                form.action = `/produto/${id}/atualizar`;
+                document.getElementById('editProductId').value = id;
+                document.getElementById('editProductName').value = nome;
+                document.getElementById('editProductArtist').value = artista;
+                document.getElementById('editProductCategory').value = estilo;
+                document.getElementById('editProductDescription').value = descricao;
+                document.getElementById('editProductPrice').value = valor;
+            });
+        });
+    </script>
+    <script th:src="@{/js/main.js}"></script>
+</body>
+
+</html>

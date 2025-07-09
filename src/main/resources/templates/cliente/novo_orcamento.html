@@ -17,13 +17,13 @@
             <div class="sidebar-header p-3 border-bottom">
                 <h4 class="mb-0">
                     <i class="fas fa-paint-brush me-2"></i>
-                    Black Ink Studio
+                    Breno Lenda
                 </h4>
             </div>
             <nav class="sidebar-nav">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/produto/catalogo}">
+                        <a class="nav-link active" th:href="@{/produto/catalogo}">
                             <i class="fas fa-images"></i>
                             Catálogo
                         </a>
@@ -31,11 +31,11 @@
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/orcamentos/meus-orcamentos}">
                             <i class="fas fa-calculator"></i>
-                            Novo Orçamento
+                            Orçamento
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" th:href="@{/orcamentos/historico}">
+                        <a class="nav-link" th:href="@{/orcamentos/historico}">
                             <i class="fas fa-history"></i>
                             Histórico
                         </a>
@@ -56,19 +56,23 @@
                         <small class="text-muted">Cliente</small>
                     </div>
                 </div>
-                <button class="btn btn-outline-light btn-sm mt-2 w-100" onclick="logout()">
-                    <i class="fas fa-sign-out-alt me-1"></i>
-                    Sair
-                </button>
+                <form th:action="@{/auth/login}" method="get">
+                    <button class="btn btn-outline-light btn-sm mt-2 w-100" type="submit">
+                        <i class="fas fa-sign-out-alt me-1"></i>
+                        Sair
+                    </button>
+                </form>
             </div>
         </div>
-
         <!-- Main Content -->
         <div class="main-content flex-fill">
             <!-- Header -->
             <header class="bg-white border-bottom p-3">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h1 class="h3 mb-0">Novo Orçamento</h1>
+                    <h1 class="h3 mb-0">
+                        <span th:if="${orcamento.id == null}">Novo Orçamento</span>
+                        <span th:if="${orcamento.id != null}">Editar Orçamento</span>
+                    </h1>
                 </div>
             </header>
 
@@ -81,8 +85,10 @@
                                 <h5 class="mb-0">Informações da Tatuagem</h5>
                             </div>
                             <div class="card-body">
-                                <form class="formulario" th:action="@{/orcamentos/novo}" method="post"
-                                    enctype="multipart/form-data" th:object="${orcamento}">
+                                <form
+                                    th:action="${orcamento.id == null} ? @{/orcamentos/novo} : @{/orcamentos/{id}/editar-orcamento(id=${orcamento.id})}"
+                                    method="post" enctype="multipart/form-data" th:object="${orcamento}">
+                                    <input type="hidden" th:if="${orcamento.id != null}" th:field="*{id}">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="mb-3">
@@ -90,7 +96,9 @@
                                                 <select class="form-select" id="artistId" name="artistaId" required>
                                                     <option value="">Selecione um artista</option>
                                                     <option th:each="artista : ${artistas}" th:value="${artista.id}"
-                                                        th:text="${artista.nome}"></option>
+                                                        th:text="${artista.nome}"
+                                                        th:selected="${orcamento.artista != null and artista.id == orcamento.artista.id}">
+                                                    </option>
                                                 </select>
                                             </div>
                                         </div>
@@ -136,9 +144,18 @@
 
                                     <div class="mb-3">
                                         <label for="tattooImage" class="form-label">Imagem de Referência</label>
-                                        <input type="file" class="form-control" th:field="*{imagem}" id="tattooImage"
-                                            name="tattooImage" accept="uploads/*">
-                                        <div class="form-text">Opcional: Envie uma imagem de referência</div>
+                                        <input type="file" class="form-control" id="tattooImage" name="imagem"
+                                            accept="image/*">
+                                        <div class="form-text">Envie uma nova imagem para substituir a atual</div>
+
+                                        <!-- Mostra a imagem atual se existir -->
+                                        <div th:if="${orcamento.imagem != null}" class="mt-2">
+                                            <p class="small">Imagem atual:</p>
+                                            <img th:src="@{'/uploads/' + ${orcamento.imagem}}" class="img-fluid rounded"
+                                                style="max-height: 200px;">
+                                            <input type="hidden" name="imagemAtual" accept="uploads/*"
+                                                th:value="${orcamento.imagem}">
+                                        </div>
                                     </div>
 
                                     <div class="mb-3">
@@ -149,7 +166,8 @@
                                     <div class="d-flex gap-2 mt-4">
                                         <button type="submit" class="btn btn-dark">
                                             <i class="fas fa-paper-plane me-2"></i>
-                                            Enviar Orçamento
+                                            <span
+                                                th:text="${orcamento.id == null} ? 'Enviar Orçamento' : 'Atualizar Orçamento'"></span>
                                         </button>
                                         <button type="reset" class="btn btn-outline-secondary">
                                             <i class="fas fa-undo me-2"></i>

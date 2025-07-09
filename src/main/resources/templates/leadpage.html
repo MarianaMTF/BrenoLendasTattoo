@@ -1,55 +1,250 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Breno Lendas - Studio de Tatuagem</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Breno Lenda - Estúdio de Tatuagem</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<body>
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Breno Lendas</h1>
-            <p>Studio de Tatuagem</p>
-            <div class="hero-buttons">
-                <a th:href="@{/cliente/cadastro}" class="botao-primario">Cadastrar-se</a>
-                <a th:href="@{/auth/login}" class="botao-secundario">Entrar</a>
-            </div>
-        </div>
-    </section>
 
-    <!-- Galeria de Trabalhos -->
-    <section class="galeria">
-        <div class="container">
-            <div class="cabecalho-pagina">
-                <h2>Nossos Trabalhos</h2>
-                <p>Confira alguns dos nossos melhores trabalhos</p>
+<body>
+    <!-- Landing Page -->
+    <div class="landing-page">
+        <!-- Header -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-black fixed-top">
+            <div class="container">
+                <a class="navbar-brand fw-bold" href="#">
+                    <i class="fas fa-paint-brush me-2"></i>
+                    Breno Lenda
+                </a>
+                <div class="navbar-nav ms-auto">
+                    <!-- Altere de onclick para data-bs-toggle -->
+                    <button class="btn btn-outline-light me-2">
+                        <a th:href="@{/auth/login}">
+                            <i class="fas fa-sign-in-alt me-1"></i>
+                            Login
+                        </a>
+                    </button>
+                    <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#registerModal">
+                        <a th:href="@{/cliente/cadastro}">
+                            <i class="fas fa-user-plus me-1"></i>
+                            Cadastrar Cliente
+                        </a>
+                    </button>
+                </div>
             </div>
-            <div class="galeria-grid">
-                <div class="galeria-item">
-                    <img src="https://images.pexels.com/photos/1319460/pexels-photo-1319460.jpeg" alt="Tatuagem 1">
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="container">
+                <div class="row align-items-center min-vh-100 py-5">
+                    <div class="col-lg-6">
+                        <h1 class="display-4 fw-bold mb-4 text-white">
+                            Arte que marca, <br>
+                            <span class="text-light">histórias que ficam</span>
+                        </h1>
+                        <p class="lead mb-4 text-light">
+                            Transformamos suas ideias em arte permanente.
+                            Nossos artistas especializados criam tatuagens únicas
+                            que contam sua história.
+                        </p>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="hero-image">
+                            <img th:src="@{/tattoo_leadpage.jpg}" alt="Tatuagem"
+                                class="img-fluid rounded shadow-lg">
+                        </div>
+                    </div>
                 </div>
-                <div class="galeria-item">
-                    <img src="https://images.pexels.com/photos/1040881/pexels-photo-1040881.jpeg" alt="Tatuagem 2">
+            </div>
+        </section>
+
+        <!-- Portfolio Section -->
+        <section id="portfolio" class="py-5 bg-white">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 text-center mb-5">
+                        <h2 class="display-5 fw-bold text-black mb-3">Nossos Trabalhos</h2>
+                        <p class="lead text-muted">Cada tatuagem é uma obra de arte única</p>
+                    </div>
                 </div>
-                <div class="galeria-item">
-                    <img src="https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg" alt="Tatuagem 3">
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm">
+                            <img th:src="@{leao.jpg}"
+                                class="card-img-top" alt="Tatuagem 1">
+                            <div class="card-body">
+                                <h5 class="card-title">Estilo Realista</h5>
+                                <p class="card-text text-muted">Tatuagens com detalhes fotográficos</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm">
+                            <img th:src="@{tradicional.jpg}"
+                                class="card-img-top" alt="Tatuagem 2">
+                            <div class="card-body">
+                                <h5 class="card-title">Estilo Tradicional</h5>
+                                <p class="card-text text-muted">Designs clássicos e atemporais</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm">
+                            <img th:src="@{geometrica.jpg}"
+                                class="card-img-top" alt="Tatuagem 3">
+                            <div class="card-body">
+                                <h5 class="card-title">Estilo Geométrico</h5>
+                                <p class="card-text text-muted">Formas precisas e simétricas</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm">
+                            <img th:src="@{tribal.jpg}"
+                                class="card-img-top" alt="Tatuagem 3">
+                            <div class="card-body">
+                                <h5 class="card-title">Estilo Tribal</h5>
+                                <p class="card-text text-muted">Formas precisas e simétricas</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="galeria-item">
-                    <img src="https://images.pexels.com/photos/1040879/pexels-photo-1040879.jpeg" alt="Tatuagem 4">
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-black text-white py-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-paint-brush me-2"></i>Breno Lenda</h5>
+                        <p class="text-muted">Sua arte, nossa paixão</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <p class="text-muted">© 2024 Breno Lenda. Todos os direitos reservados.</p>
+                    </div>
                 </div>
-                <div class="galeria-item">
-                    <img src="https://images.pexels.com/photos/1040878/pexels-photo-1040878.jpeg" alt="Tatuagem 5">
+            </div>
+        </footer>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Login</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="galeria-item">
-                    <img src="https://images.pexels.com/photos/1040877/pexels-photo-1040877.jpeg" alt="Tatuagem 6">
+                <div class="modal-body">
+                    <form th:action="@{/auth/logar}" method="post" th:object="${login}">
+                        <div class="mb-3">
+                            <label for="loginEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="loginEmail" name="email" th:field="*{email}"
+                                required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Senha</label>
+                            <input type="password" class="form-control" id="loginPassword" name="senha"
+                                th:field="*{senha}" required>
+                        </div>
+                        <!--
+                        <div class="mb-3">
+                            <select class="form-select" id="loginRole" th:field="*{role}" required>
+                                <option value="">Selecione seu tipo</option>
+                                <option value="client">Cliente</option>
+                                <option value="artist">Artista</option>
+                                <option value="admin">Administrador</option>
+                            </select>
+                        </div>
+                        -->
+                        <button type="submit" class="btn btn-dark w-100">
+                            <i class="fas fa-sign-in-alt me-2"></i>
+                            Entrar
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">Cadastro de Cliente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/cliente/register}" method="post" th:object="${cliente}">
+                        <div class="mb-3">
+                            <label for="registerName" class="form-label">Nome Completo</label>
+                            <input type="text" class="form-control" id="registerName" name="nome" th:field="*{nome}"
+                                required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="registerEmail" name="email" th:field="*{email}"
+                                required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerPhone" class="form-label">Telefone</label>
+                            <input type="tel" class="form-control" id="registerPhone" name="telefone"
+                                th:field="*{telefone}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerCpf" class="form-label">CPF</label>
+                            <input type="text" class="form-control" id="registerCpf" name="cpf" th:field="*{cpf}"
+                                required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerPassword" class="form-label">Senha</label>
+                            <input type="password" class="form-control" id="registerPassword" name="senha"
+                                th:field="*{senha}" required>
+                        </div>
+                        <button type="submit" class="btn btn-dark w-100">
+                            <i class="fas fa-user-plus me-2"></i>
+                            Cadastrar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Script simplificado para evitar conflitos -->
+    <script>
+        // Função para rolagem suave
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Inicializar tooltips (se necessário)
+        document.addEventListener('DOMContentLoaded', function() {
+            const tooltipTriggerList = [].slice.call(
+                document.querySelectorAll('[data-bs-toggle="tooltip"]')
+            );
+            tooltipTriggerList.map(function(tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+    </script>
 </body>
+
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catálogo - Black Ink Studio</title>
+    <title>Catálogo - Breno Lenda Tattoo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/style.css}">
@@ -15,7 +15,7 @@
         <div class="sidebar-header p-3 border-bottom">
             <h4 class="mb-0">
                 <i class="fas fa-paint-brush me-2"></i>
-                Black Ink Studio
+                Breno Lenda
             </h4>
         </div>
         <nav class="sidebar-nav">
@@ -29,7 +29,7 @@
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/orcamentos/meus-orcamentos}">
                         <i class="fas fa-calculator"></i>
-                        Novo Orçamento
+                        Orçamento
                     </a>
                 </li>
                 <li class="nav-item">
@@ -54,12 +54,12 @@
                     <small class="text-muted">Cliente</small>
                 </div>
             </div>
-            <form th:action="@{/auth/logout}" method="post">
-                <button class="btn btn-outline-light btn-sm mt-2 w-100" type="submit">
-                    <i class="fas fa-sign-out-alt me-1"></i>
-                    Sair
-                </button>
-            </form>
+            <form th:action="@{/auth/login}" method="get">
+                    <button class="btn btn-outline-light btn-sm mt-2 w-100" type="submit">
+                        <i class="fas fa-sign-out-alt me-1"></i>
+                        Sair
+                    </button>
+                </form>
         </div>
     </div>
 
@@ -96,9 +96,9 @@
                         <div class="card-body">
                             <h5 class="card-title" th:text="${produto.nome}">Nome Produto</h5>
                             <p class="card-text" th:text="${produto.descricao}">Descrição do produto</p>
-                            <p class="card-text"><strong>Artista:</strong> <span th:text="${produto.artista.nome}">Artista</span></p>
-                            <p class="card-text"><strong>Categoria:</strong> <span th:text="${produto.categoria}">Categoria</span></p>
-                            <p class="card-text"><strong>Preço base:</strong> R$ <span th:text="${produto.valor}">0.00</span></p>
+                            <p class="card-text"><strong>Artista:</strong> <span th:text="${produto.artista.nome}"></span></p>
+                            <p class="card-text"><strong>Categoria:</strong> <span th:text="${produto.estilo}"></span></p>
+                            <p class="card-text"><strong>Preço base:</strong> R$ <span th:text="${produto.valor}"></span></p>
                             <form th:action="@{/orcamentos/{id}/novo-orcamento(id=${produto.id})}" method="get">
                                 <button class="btn btn-dark w-100" type="submit">
                                     <i class="fas fa-calculator me-2"></i>

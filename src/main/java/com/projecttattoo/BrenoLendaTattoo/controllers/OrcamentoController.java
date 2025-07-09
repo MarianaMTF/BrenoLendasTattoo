@@ -137,7 +137,7 @@ public class OrcamentoController {
         if (produtoId != null) {
             response = orcamentoService.regiterByProduto(requestOrcamentoDto, produtoId, cliente);
         } else {
-            response = orcamentoService.register(requestOrcamentoDto, cliente);
+            response = orcamentoService.register(requestOrcamentoDto, cliente, artista);
         }
 
         if (response.getStatusCode().is2xxSuccessful()) {
@@ -187,10 +187,16 @@ public class OrcamentoController {
     @GetMapping("/{id}/editar")
     public String exibirFormularioEdicao(@PathVariable Integer id, Model model) {
         ResponseEntity<ResponseOrcamentoDto> response = orcamentoService.getById(id);
-        System.out.println("Achei o orcamento");
         if (response.getStatusCode().is2xxSuccessful()) {
             model.addAttribute("orcamento", response.getBody());
-            return "atualizar_orcamento";
+            
+            // Carrega a lista de artistas
+            ResponseEntity<List<ResponseArtistaDTO>> artistasResponse = artistaService.listarTodos();
+            if (artistasResponse.getStatusCode().is2xxSuccessful()) {
+                model.addAttribute("artistas", artistasResponse.getBody());
+            }
+            
+            return "cliente/novo_orcamento";
         }
         return "redirect:/orcamentos/meus-orcamentos";
     }

@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.projecttattoo.BrenoLendaTattoo.dto.artista.ResponseArtistaDTO;
 import com.projecttattoo.BrenoLendaTattoo.dto.produto.RequestProdutoDto;
 import com.projecttattoo.BrenoLendaTattoo.dto.produto.ResponseProdutoDto;
+import com.projecttattoo.BrenoLendaTattoo.models.Artista;
 import com.projecttattoo.BrenoLendaTattoo.models.Produto;
 import com.projecttattoo.BrenoLendaTattoo.repositories.ArtistaRepository;
 import com.projecttattoo.BrenoLendaTattoo.services.ArtistaService;
@@ -39,10 +40,13 @@ public class ProdutoController {
 	@Autowired
 	private ArtistaService artistaService;
 	
+	@Autowired
+	private ArtistaRepository artistaRepository;
+	
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/admin-novo-produto")
 	public String addNovoProduto(Model model) {
-		model.addAttribute("produto", new ResponseProdutoDto(null, null, null, null, null, null, null));
+		model.addAttribute("produto", new ResponseProdutoDto(null, null, null, null, null, null, null, null, null));
 		return "admin_novo_produto";
 	}
 	
@@ -51,14 +55,14 @@ public class ProdutoController {
 	public String register(
 			@RequestParam("imagem") MultipartFile imagem,
 			@RequestParam("nome") String nome,
-	        @RequestParam("largura") Double largura,
-	        @RequestParam("altura") Double altura,
+			@RequestParam("artista") int idArtista,
+			@RequestParam("estilo") String estilo,
 	        @RequestParam("descricao") String descricao,
 	        @RequestParam("valor") Double valor,
 	        Model model
 			){
-		System.out.println(largura);
-		RequestProdutoDto requestProdutoDto = new RequestProdutoDto(imagem, nome, largura, altura, descricao, valor);
+		Artista artista = artistaRepository.findById(idArtista);
+		RequestProdutoDto requestProdutoDto = new RequestProdutoDto(imagem, nome, artista, estilo, null, null, descricao, valor);
 		ResponseEntity<ResponseProdutoDto> response = produtoService.register(requestProdutoDto);
 		
 		if (response.getStatusCode().is2xxSuccessful()) {
@@ -73,10 +77,18 @@ public class ProdutoController {
 	@GetMapping("/admin-catalogo")
 	public String listarProdutosAdmin(Model model) {
 		ResponseEntity<List<ResponseProdutoDto>> response = produtoService.getAll();
+		ResponseEntity<List<ResponseArtistaDTO>> responseArtista = artistaService.listarTodos();
+		
 		if(response.getStatusCode().is2xxSuccessful()) {
-			model.addAttribute("produtos", response.getBody());			
+			model.addAttribute("produtos", response.getBody());	
+			//model.addAttribute("produto", new RequestProdutoDto(null, null, null, null, null, null, null, null));
 		}
-		return "admin_catalogo";
+		
+		if(responseArtista.getStatusCode().is2xxSuccessful()) {
+	        model.addAttribute("artistas", responseArtista.getBody());
+	    }
+		
+		return "artista/catalogo";
 	}
 	
 	@PreAuthorize("hasRole('USER')")
@@ -89,7 +101,7 @@ public class ProdutoController {
 		
 		ResponseEntity<List<ResponseArtistaDTO>> responseArtista = artistaService.listarTodos();
 		if(responseArtista.getStatusCode().is2xxSuccessful()) {
-			model.addAttribute(responseArtista);
+			model.addAttribute("artistas", responseArtista.getBody());
 		}
 		return "cliente/catalogo";
 	}
@@ -108,17 +120,27 @@ public class ProdutoController {
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/{id}/atualizar")
-	public String update(@PathVariable Integer id, @ModelAttribute RequestProdutoDto body, Model model){
-		ResponseEntity<ResponseProdutoDto> response = produtoService.update(id, body);
-		
-		if (response.getStatusCode().is2xxSuccessful()) {
-        	System.out.println("Consegui atualizar");
-            model.addAttribute("message", "Produto atualizado com sucesso!");
-        } else {
-        	System.out.println("Não consegui atualizar");
-            model.addAttribute("error", "Erro ao atualizar o produto.");
-        }
-        return "redirect:/produto/admin-catalogo";
+	public String update(
+	        @PathVariable Integer id,
+	        @RequestParam(value = "imagem", required = false) MultipartFile imagem,
+	        @RequestParam("nome") String nome,
+	        @RequestParam("artista") int idArtista,
+	        @RequestParam("estilo") String estilo,
+	        @RequestParam("descricao") String descricao,
+	        @RequestParam("valor") Double valor,
+	        Model model) {
+
+	    Artista artista = artistaRepository.findById(idArtista);
+	    RequestProdutoDto body = new RequestProdutoDto(imagem, nome, artista, estilo, null, null, descricao, valor);
+	    
+	    ResponseEntity<ResponseProdutoDto> response = produtoService.update(id, body);
+	    
+	    if (response.getStatusCode().is2xxSuccessful()) {
+	        model.addAttribute("message", "Produto atualizado com sucesso!");
+	    } else {
+	        model.addAttribute("error", "Erro ao atualizar o produto.");
+	    }
+	    return "redirect:/produto/admin-catalogo";
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")

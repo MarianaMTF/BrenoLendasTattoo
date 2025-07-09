@@ -3,6 +3,7 @@ package com.projecttattoo.BrenoLendaTattoo.services;
 import com.projecttattoo.BrenoLendaTattoo.dto.orcamento.RequestOrcamentoDto;
 import com.projecttattoo.BrenoLendaTattoo.dto.orcamento.ResponseOrcamentoDto;
 import com.projecttattoo.BrenoLendaTattoo.interfaces.OrcamentoInterfaceService;
+import com.projecttattoo.BrenoLendaTattoo.models.Artista;
 import com.projecttattoo.BrenoLendaTattoo.models.Cliente;
 import com.projecttattoo.BrenoLendaTattoo.models.Orcamento;
 import com.projecttattoo.BrenoLendaTattoo.models.Produto;
@@ -37,7 +38,7 @@ public class OrcamentoService implements OrcamentoInterfaceService {
 	private OrcamentoRespository orcamentoRespository;
 
 	@Override
-	public ResponseEntity<ResponseOrcamentoDto> register(RequestOrcamentoDto body, Cliente cliente) {
+	public ResponseEntity<ResponseOrcamentoDto> register(RequestOrcamentoDto body, Cliente cliente, Artista artista) {
 		try {
 			Orcamento newOrcamento = new Orcamento();
 
@@ -51,13 +52,14 @@ public class OrcamentoService implements OrcamentoInterfaceService {
 			newOrcamento.setStatusOrcamento("Em análise!");
 			newOrcamento.setAgendamento(null);
 			newOrcamento.setCliente(cliente);
+			newOrcamento.setArtista(artista);
 
 			orcamentoRespository.save(newOrcamento);
 
 			ResponseOrcamentoDto orcamentoDto = new ResponseOrcamentoDto(newOrcamento.getId(), newOrcamento.getImagem(),
 					newOrcamento.getAltura(), newOrcamento.getLargura(), newOrcamento.getDescricao(),
 					newOrcamento.getParteCorpo(), newOrcamento.getValor(), newOrcamento.getStatusOrcamento(),
-					newOrcamento.getAgendamento(), newOrcamento.getCliente());
+					newOrcamento.getAgendamento(), newOrcamento.getCliente(), newOrcamento.getArtista());
 
 			return ResponseEntity.status(HttpStatus.CREATED).body(orcamentoDto);
 		} catch (Exception e) {
@@ -103,7 +105,7 @@ public class OrcamentoService implements OrcamentoInterfaceService {
 			Orcamento orcamento = orcamentoOpt.get();
 			ResponseOrcamentoDto orcamentoDto = new ResponseOrcamentoDto(orcamento.getId(), orcamento.getImagem(),
 					orcamento.getAltura(), orcamento.getLargura(), orcamento.getDescricao(), orcamento.getParteCorpo(),
-					orcamento.getValor(), orcamento.getStatusOrcamento(), orcamento.getAgendamento(), orcamento.getCliente());
+					orcamento.getValor(), orcamento.getStatusOrcamento(), orcamento.getAgendamento(), orcamento.getCliente(), orcamento.getArtista());
 
 			return ResponseEntity.ok(orcamentoDto);
 		}
@@ -119,7 +121,7 @@ public class OrcamentoService implements OrcamentoInterfaceService {
 			List<ResponseOrcamentoDto> orcamentosDto = orcamentos.stream()
 					.map(orcamento -> new ResponseOrcamentoDto(orcamento.getId(), orcamento.getImagem(),
 							orcamento.getAltura(), orcamento.getLargura(), orcamento.getDescricao(), orcamento.getParteCorpo(),
-							orcamento.getValor(), orcamento.getStatusOrcamento(), orcamento.getAgendamento(), orcamento.getCliente()))
+							orcamento.getValor(), orcamento.getStatusOrcamento(), orcamento.getAgendamento(), orcamento.getCliente(), orcamento.getArtista()))
 					.toList();
 
 			return ResponseEntity.ok(orcamentosDto);
@@ -158,7 +160,7 @@ public class OrcamentoService implements OrcamentoInterfaceService {
 
 			ResponseOrcamentoDto orcamentoDto = new ResponseOrcamentoDto(orcamento.getId(), orcamento.getImagem(),
 					orcamento.getAltura(), orcamento.getLargura(), orcamento.getDescricao(), orcamento.getParteCorpo(),
-					orcamento.getValor(), orcamento.getStatusOrcamento(), orcamento.getAgendamento(), orcamento.getCliente());
+					orcamento.getValor(), orcamento.getStatusOrcamento(), orcamento.getAgendamento(), orcamento.getCliente(), orcamento.getArtista());
 
 			System.out.println("Retornando o card com os dados atuaizados");
 
@@ -190,7 +192,7 @@ public class OrcamentoService implements OrcamentoInterfaceService {
 
 			ResponseOrcamentoDto orcamentoDto = new ResponseOrcamentoDto(orcamento.getId(), orcamento.getImagem(),
 					orcamento.getAltura(), orcamento.getLargura(), orcamento.getDescricao(), orcamento.getParteCorpo(),
-					orcamento.getValor(), orcamento.getStatusOrcamento(), orcamento.getAgendamento(), orcamento.getCliente());
+					orcamento.getValor(), orcamento.getStatusOrcamento(), orcamento.getAgendamento(), orcamento.getCliente(), orcamento.getArtista());
 
 			return ResponseEntity.ok(orcamentoDto);
 		}
@@ -224,7 +226,7 @@ public class OrcamentoService implements OrcamentoInterfaceService {
 			ResponseOrcamentoDto orcamentoDto = new ResponseOrcamentoDto(newOrcamento.getId(), newOrcamento.getImagem(),
 					newOrcamento.getAltura(), newOrcamento.getLargura(), newOrcamento.getDescricao(),
 					newOrcamento.getParteCorpo(), newOrcamento.getValor(), newOrcamento.getStatusOrcamento(),
-					newOrcamento.getAgendamento(), newOrcamento.getCliente());
+					newOrcamento.getAgendamento(), newOrcamento.getCliente(), newOrcamento.getArtista());
 
 			return ResponseEntity.status(HttpStatus.CREATED).body(orcamentoDto);
 		} catch (Exception e) {
@@ -243,7 +245,7 @@ public class OrcamentoService implements OrcamentoInterfaceService {
 	private ResponseOrcamentoDto mapToResponseOrcamentoDto(Orcamento orcamento) {
 		return new ResponseOrcamentoDto(orcamento.getId(), orcamento.getImagem(), orcamento.getAltura(),
 				orcamento.getLargura(), orcamento.getDescricao(), orcamento.getParteCorpo(), orcamento.getValor(),
-				orcamento.getStatusOrcamento(), orcamento.getAgendamento(), orcamento.getCliente());
+				orcamento.getStatusOrcamento(), orcamento.getAgendamento(), orcamento.getCliente(), orcamento.getArtista());
 
 	}
 }

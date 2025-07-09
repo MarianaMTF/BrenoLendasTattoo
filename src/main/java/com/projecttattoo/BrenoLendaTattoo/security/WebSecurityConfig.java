@@ -23,11 +23,11 @@ public class WebSecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		return http.csrf(csrf -> csrf.disable())
-				.headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()))
+		return http.csrf(csrf -> csrf.disable()) // Já está presente no seu código
+		        .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()))
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(authorize -> authorize
-						.requestMatchers("/static/**", "/css/**", "/images/**", "/uploads/**").permitAll()
+						.requestMatchers("/static/**", "/css/**", "/js/**", "/images/**", "/uploads/**").permitAll()
 						.requestMatchers("/auth/login", "/auth/logar", "/cliente/cadastro", "/cliente/register",
 						        "/produto/catalogo", "/home").permitAll()
 						.requestMatchers("/cliente/minha-conta").hasAnyRole("USER", "ADMIN")
@@ -49,8 +49,6 @@ public class WebSecurityConfig {
 						.requestMatchers("/produto/{id}/deletar").hasRole("ADMIN")
 						.requestMatchers("/orcamentos/admin-orcamentos").hasRole("ADMIN")
 						.requestMatchers("/produto/{id}/concluir").hasRole("ADMIN")
-						.requestMatchers("/admin/artistas/novo").hasRole("ADMIN")
-						.requestMatchers("/admin/artistas").hasRole("ADMIN")
 						.anyRequest()
 						.authenticated())
 				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class).build();

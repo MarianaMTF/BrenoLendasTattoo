@@ -71,30 +71,6 @@ public class ClienteService implements ClienteInterfaceService {
     }
 
     @Override
-    public ResponseEntity<Map<String, String>> login(LoginDto loginDto) {
-        Logins cliente = loginsRepository.findByEmail(loginDto.email());
-        
-        if (cliente == null) {
-        	System.out.println("cliente não encontrado");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Usuário não encontrado"));
-        }
-
-        if (!encoder.matches(loginDto.senha(), cliente.getSenha())) {
-        	System.out.println("senha incorreta");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Senha incorreta"));
-        }
-
-        // Gera o token JWT
-        String token = authenticatedService.setToken(cliente);
-
-        // Retorna o token e a role
-        return ResponseEntity.ok(Map.of(
-            "token", token,
-            "role", cliente.getUserRole().toString()
-        ));
-    }
-
-    @Override
     public ResponseEntity<String> resetPassword(String email, LoginDto senha) {
         Cliente cliente = clienteRepository.findByEmail(email);
         if (cliente == null) {

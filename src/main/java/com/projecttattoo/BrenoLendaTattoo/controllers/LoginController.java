@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.projecttattoo.BrenoLendaTattoo.dto.LoginDto;
+import com.projecttattoo.BrenoLendaTattoo.services.AuthService;
 import com.projecttattoo.BrenoLendaTattoo.services.ClienteService;
 
 import jakarta.servlet.http.Cookie;
@@ -25,43 +26,43 @@ import jakarta.servlet.http.HttpServletResponse;
 @RequestMapping("/auth")
 public class LoginController {
 
-	@Autowired
-	private ClienteService clienteService;
-	
-	@GetMapping("/login")
+    @Autowired
+    private AuthService authService;
+    
+    @GetMapping("/login")
     public String exibirFormularioLogin(Model model) {
-		model.addAttribute("login", new LoginDto(null, null));
+        model.addAttribute("login", new LoginDto(null, null));
         return "login";
     }
-	
-	@PostMapping("/logar")
-	public String processarLogin(
-	    @ModelAttribute("login") LoginDto login, 
-	    Model model,
-	    HttpServletResponse response
-	) {
-	    ResponseEntity<Map<String, String>> authResponse = clienteService.login(login);
+    
+    @PostMapping("/logar")
+    public String processarLogin(
+        @ModelAttribute("login") LoginDto login, 
+        Model model,
+        HttpServletResponse response
+    ) {
+        ResponseEntity<Map<String, String>> authResponse = authService.login(login);
 
-	    if (authResponse.getStatusCode().is2xxSuccessful()) {
-	        String token = authResponse.getBody().get("token");
-	        String role = authResponse.getBody().get("role");
+        if (authResponse.getStatusCode().is2xxSuccessful()) {
+            String token = authResponse.getBody().get("token");
+            String role = authResponse.getBody().get("role");
+            System.out.println(role);
 
-	        // Armazena o token em um cookie
-	        Cookie cookie = new Cookie("token", token);
-	        cookie.setPath("/");
-	        response.addCookie(cookie);
+            // Armazena o token em um cookie
+            Cookie cookie = new Cookie("token", token);
+            cookie.setPath("/");
+            response.addCookie(cookie);
 
-	        System.out.println("Login bem-sucedido. Role: " + role); // Log para depuração
-
-	        if ("ADMIN".equals(role)) {
-	            return "redirect:/produto/admin-catalogo";
-	        } else {
-	            return "redirect:/produto/catalogo"; 
-	        }
-	    } else {
-	        model.addAttribute("error", "Credenciais inválidas");
-	        System.out.println("Login falhou. Status: " + authResponse.getStatusCode()); // Log para depuração
-	        return "login";
-	    }
-	}
+            if ("ADMIN".equals(role)) {
+            	System.out.println("Sou admin");
+                return "redirect:/produto/admin-catalogo";
+            } else {
+            	System.out.println("Sou cliente");
+                return "redirect:/produto/catalogo"; 
+            }
+        } else {
+            model.addAttribute("error", "Credenciais inválidas");
+            return "login";
+        }
+    }
 }
